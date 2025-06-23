@@ -1,0 +1,10 @@
+Package: episodes
+Title: Build and format drug episodes for health-state transition modelling 
+Version: 0.0.0.9000
+Authors@R: 
+    person("Nirupama", "Tamvada", , "ntamvada@bccrc.ca", role = c("aut", "cre"))
+Description: Build and format drug episodes with health transition states from drug prescription data. Outputs can be fed into a health economic model for cost-effectiveness calculations.
+License: `use_mit_license()`
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
