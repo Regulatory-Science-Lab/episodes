@@ -46,3 +46,4 @@ This will:
 
 - Output results to a timestamped Excel file
 
+For the Excel file to be saved, you MUST have a template Excel file that is compatible to be populated with the health state estimates saved in the `dir` (directory) that you specify (see `h:\PREDiCText\nirupama\weibull_estimates\01_public_parameters_updatedNT.xlsx`)
