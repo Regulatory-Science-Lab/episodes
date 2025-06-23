@@ -4,20 +4,20 @@ library(tarchetypes)
 tar_option_set(
   packages = c(
     "dplyr", "tidyr", "haven", "openxlsx", "glue",
-    "lubridate", "purrr", "survival", "flexsurv", "episodes"
-  )
+    "lubridate", "purrr", "survival", "flexsurv"),
+  imports = "episodes"
 )
 
-list(
+# Load tumour definitions passed in via env var
+tumour_path <- Sys.getenv("TUMOUR_PATH", unset = NA)
 
-  tar_target(
-    tumour_defs,
-    tibble::tibble(
-      tumour = c("nsclc", "breast"),
-      treatment = c("cisplatin|carboplatin", "capecitabine"),
-      exact = c(FALSE, TRUE)
-    )
-  ),
+if (is.na(tumour_path) || !file.exists(tumour_path)) {
+  stop("TUMOUR_PATH env var not set or file does not exist.")
+}
+
+tumour_defs <- readRDS(tumour_path)
+
+list(
 
   tar_target(
     tumour_outputs,
@@ -40,8 +40,6 @@ list(
       state_summary  <- state_numbers_summary(state_data$drug_transitions)
       death_table    <- death_table(state_data$drug_transitions)
 
-      print(death_table)
-
       list(
         tumour = tumour,
         treatment = treatment,
@@ -54,7 +52,6 @@ list(
     iteration = "list"
   ),
 
-  # Final Excel output step
   tar_target(
     combined_excel_output,
     {
