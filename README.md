@@ -1,3 +1,7 @@
+ <!-- badges: start -->
+  [![R-CMD-check](https://github.com/Regulatory-Science-Lab/episodes/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Regulatory-Science-Lab/episodes/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 # episodes
 
 `episodes` is an R package for estimating transition probabilities from prescription data. The package has specific functions catered to the Flatiron oncogenomic database but can be used on other cancer prescription datasets as well to estimate transition health states from the data. 
