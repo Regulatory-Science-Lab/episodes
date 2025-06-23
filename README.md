@@ -20,6 +20,9 @@ You can install the development version of the package directly from GitHub:
 devtools::install_github("Regulatory-Science-Lab/episodes")
 ```
 
+## 🚀 Usage
+
+
 The episodes pipeline can be run in a single line with the `run_episodes_pipeline` function. It takes in a `tibble` with the following columns:
 
 ```r
