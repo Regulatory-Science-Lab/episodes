@@ -2,10 +2,16 @@
 % Please edit documentation in R/construct_state_episodes.R
 \name{fix_death_before_progression}
 \alias{fix_death_before_progression}
-\title{Fix Deaths Before Progression}
+\title{Adjust incorrect death times}
 \usage{
 fix_death_before_progression(lines)
 }
+\arguments{
+\item{lines}{formatted drug episodes data}
+}
+\value{
+adjusted death dates dataframe
+}
 \description{
-Fix Deaths Before Progression
+Adjust incorrect death times
 }

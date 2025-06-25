@@ -2,10 +2,19 @@
 % Please edit documentation in R/construct_state_episodes.R
 \name{build_off_from_on}
 \alias{build_off_from_on}
-\title{Build off-treatment from on-treatment}
+\title{Build off-treatment segments following on-treatment}
 \usage{
 build_off_from_on(on_treatment, lines)
 }
+\arguments{
+\item{on_treatment}{A data.frame from \code{build_on_treatment()} containing patient states and next transitions.}
+
+\item{lines}{A data.frame of all line-level treatment data.}
+}
+\value{
+A data.frame with all off-treatment segments, including subsequent progression and death states.
+}
 \description{
-Build off-treatment from on-treatment
+Identifies patients who transitioned to an off-treatment state after the on-treatment segment,
+and builds their subsequent progression or death timelines.
 }

@@ -47,9 +47,9 @@ generate_cutoffs <- function(drug_episodes) {
       days_to_next_line = as.numeric(next_linestart - lineenddate)
     ) %>%
     dplyr::ungroup()
-  
+
   next_line_cutoff <- stats::quantile(drug_episodes$days_to_next_line, 0.50, names = FALSE, na.rm = TRUE)
-  
+
   drug_episodes_progression <- drug_episodes %>%
     dplyr::group_by(patientid) %>%
     dplyr::filter(linenumber == chemo_line) %>%
@@ -57,20 +57,20 @@ generate_cutoffs <- function(drug_episodes) {
       days_to_progression = as.numeric(progression_date - lineenddate)
     ) %>%
     dplyr::filter(days_to_progression > 0)
-  
+
   progression_cutoff <- stats::quantile(drug_episodes_progression$days_to_progression, 0.75, names = FALSE, na.rm = TRUE)
-  
+
   drug_episodes_death <- drug_episodes %>%
     dplyr::group_by(patientid) %>%
-    dplyr::filter(dplyr::n() == 1, linenumber == chemo_line, !is.na(progression_date)) %>%  
+    dplyr::filter(dplyr::n() == 1, linenumber == chemo_line, !is.na(progression_date)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       days_to_death = as.numeric(death_date - lineenddate)
     ) %>%
     dplyr::filter(days_to_death > 0)
-  
+
   death_cutoff <- stats::quantile(drug_episodes_death$days_to_death, 0.75, names = FALSE, na.rm = TRUE)
-  
+
   return(list(
     next_line_cutoff = next_line_cutoff,
     progression_cutoff = progression_cutoff,

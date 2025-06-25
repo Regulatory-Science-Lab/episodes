@@ -8,10 +8,6 @@ construct_state_episodes(drug_episodes)
 }
 \arguments{
 \item{drug_episodes}{A data.frame of drug episode-level information with survival events.}
-
-\item{prog_on_cutoff}{Integer. Maximum negative offset allowed between progression and lineenddate.}
-
-\item{death_cutoff, progression_cutoff, next_line_cutoff}{Numeric thresholds used to define transitions.}
 }
 \value{
 A data.frame of structured drug transitions.

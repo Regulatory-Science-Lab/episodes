@@ -2,10 +2,19 @@
 % Please edit documentation in R/construct_state_episodes.R
 \name{build_progression_from_on}
 \alias{build_progression_from_on}
-\title{Build progression from on-treatment state}
+\title{Build progression events following on-treatment}
 \usage{
 build_progression_from_on(on_treatment, lines)
 }
+\arguments{
+\item{on_treatment}{A data.frame from \code{build_on_treatment()} containing patient states and next transitions.}
+
+\item{lines}{A data.frame of all line-level treatment data.}
+}
+\value{
+A data.frame representing progression segments including Death where applicable.
+}
 \description{
-Build progression from on-treatment state
+Constructs progression segments for patients who progressed after on-treatment. Includes logic for
+transitions to next-line treatment or death. Also returns any corresponding death segment.
 }

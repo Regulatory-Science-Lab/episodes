@@ -2,10 +2,27 @@
 % Please edit documentation in R/construct_state_episodes.R
 \name{build_on_treatment}
 \alias{build_on_treatment}
-\title{Build On-Treatment State}
+\title{Build on-treatment state transitions}
 \usage{
 build_on_treatment(lines, death_cutoff, progression_cutoff, next_line_cutoff)
 }
+\arguments{
+\item{lines}{A data.frame of line-level information including treatment dates and survival events.}
+
+\item{death_cutoff}{Days between line end and death to consider a direct transition to death.}
+
+\item{progression_cutoff}{Days between line end and progression to define direct progression.}
+
+\item{next_line_cutoff}{Days between line end and start of next line to define progression.}
+}
+\value{
+A list with two elements:
+\describe{
+\item{on_treatment}{The full on-treatment data with next states and adjusted dates.}
+\item{on_treatment_clean}{A reduced data.frame with only On_Treatment and Death states.}
+}
+}
 \description{
-Build On-Treatment State
+Identifies the on-treatment phase for patients on their chemo line and determines
+their next state (progression, death, or off-treatment). Also adjusts line end dates accordingly.
 }

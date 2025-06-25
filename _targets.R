@@ -1,7 +1,23 @@
 library(targets)
 library(tarchetypes)
 
-tar_option_set(
+utils::globalVariables(c(
+  "Date_LastClinicalNote", "Date_LastContact", "Date_LastFollowUp",
+  "Date_TxEnd_PostReport", "after_death", "chemo_line", "days_to_death",
+  "days_to_progression", "death_date", "death_flag", "death_month",
+  "detaileddrugcategory", "dist", "drop_line", "episodedate", "event",
+  "first_line_start", "gender", "group_id", "is_single_day", "label",
+  "lineenddate", "lineenddate_off", "linename", "linenumber",
+  "linesetting", "linestartdate", "merge_with_next", "merge_with_prev",
+  "month_relative", "new_line", "next_gap", "next_linestart", "next_name",
+  "next_start", "next_state", "on_treatment", "overlaps_previous",
+  "parsemonthofdeath", "patientid", "prev_end", "prev_gap", "prev_name",
+  "prior_lines", "progression_date", "progression_state",
+  "progressiondate", "scale_lci", "scale_uci", "seg_end", "shape",
+  "shape_lci", "shape_uci", "state", "state_transition", "target_end",
+  "target_line", "target_name", "target_start", "time", "."))
+
+targets::tar_option_set(
   packages = c(
     "dplyr", "tidyr", "haven", "openxlsx", "glue",
     "lubridate", "purrr", "survival", "flexsurv", "episodes"
@@ -19,7 +35,7 @@ list(
   ),
 
   # Step 1: Load tumour_defs from the tracked file path
-  tar_target(
+  targets::tar_target(
     tumour_defs,
     {
       if (is.na(tumour_path) || !file.exists(tumour_path)) {
@@ -32,7 +48,7 @@ list(
   ),
 
   # Step 2: Dynamic branching over rows
-  tar_target(
+  targets::tar_target(
     tumour_row,
     tumour_defs,
     pattern = map(tumour_defs),
@@ -40,7 +56,7 @@ list(
   ),
 
   # Step 3: Process each row
-  tar_target(
+  targets::tar_target(
     tumour_outputs,
     {
       drug_episodes <- prep_episode_data(
@@ -74,7 +90,7 @@ list(
   ),
 
   # Step 4: Final output
-  tar_target(
+  targets::tar_target(
     combined_excel_output,
     {
       wb <- openxlsx::loadWorkbook("H:/PREDiCText/nirupama/weibull_estimates/01_public_parameters_updatedNT.xlsx")
@@ -90,6 +106,6 @@ list(
       openxlsx::saveWorkbook(wb, out_path, overwrite = FALSE)
       out_path
     },
-    cue = tar_cue(mode = "always")
+    cue = targets::tar_cue(mode = "always")
   )
 )

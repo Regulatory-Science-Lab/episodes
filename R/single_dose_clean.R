@@ -7,7 +7,7 @@
 #' It supports threshold-based partial overlap merging and reconstructs treatment
 #' episodes by recomputing line numbers after merging or dropping.
 #'
-#' @param ep_dataA data frame containing line-level treatment data. Must include
+#' @param ep_data data frame containing line-level treatment data. Must include
 #'   columns: `patientid`, `linestartdate`, `lineenddate`, `linenumber`, `linename`.
 #' @param drug_separator A character string used to split multiple drugs in `linename`.
 #'   Default is ",".
@@ -19,22 +19,23 @@
 #'   `lineenddate`, `linename`, `linenumber`), but with collapsed or dropped single-day lines.
 #'
 #' @examples
+#' \dontrun{
 #' cleaned_lines <- single_dose_clean(ep_data)
-#'
+#' }
 #' @import dplyr
 #' @importFrom stringr str_squish
 #' @export
 single_dose_clean <- function(ep_data, drug_separator = ",", overlap_threshold = 1) {
-  
+
   # Helper: split drugs into a sorted set
   split_drugs <- function(name) sort(trimws(unlist(strsplit(name, drug_separator))))
-  
+
   # Helper: check if two line names have overlapping drugs (at least `threshold`)
   has_overlap <- function(name1, name2, threshold = overlap_threshold) {
     if (is.na(name1) | is.na(name2)) return(FALSE)
     length(intersect(split_drugs(name1), split_drugs(name2))) >= threshold
   }
-  
+
   # Flag single-day lines and gather adjacent line info
   ep_flagged <- ep_data %>%
     dplyr::arrange(patientid, linestartdate, linenumber) %>%
@@ -53,20 +54,20 @@ single_dose_clean <- function(ep_data, drug_separator = ",", overlap_threshold =
       merge_with_prev = mapply(function(x, y, gap, single) {
         single & !is.na(gap) & has_overlap(x, y)
       }, linename, prev_name, prev_gap, is_single_day),
-      
+
       merge_with_next = mapply(function(x, y, gap, single) {
         single & !is.na(gap) & has_overlap(x, y)
       }, linename, next_name, next_gap, is_single_day),
-      
+
       drop_line = is_single_day & !merge_with_prev & !merge_with_next
     )
-  
+
   # Identify which lines will be merged and to whom
   to_merge <- dplyr::bind_rows(
     ep_flagged %>% dplyr::filter(merge_with_prev) %>% dplyr::mutate(target_line = linenumber - 1),
     ep_flagged %>% dplyr::filter(merge_with_next) %>% dplyr::mutate(target_line = linenumber + 1)
   )
-  
+
   # Prepare target lines to merge with
   target_lines <- ep_flagged %>%
     dplyr::select(patientid, linenumber, linestartdate, lineenddate, linename) %>%
@@ -76,9 +77,9 @@ single_dose_clean <- function(ep_data, drug_separator = ",", overlap_threshold =
       target_end    = lineenddate,
       target_name   = linename
     )
-  
+
   to_merge_full <- dplyr::left_join(to_merge, target_lines, by = c("patientid", "target_line"))
-  
+
   # Collapse line info for merged lines
   collapsed_lines <- to_merge_full %>%
     dplyr::rowwise() %>%
@@ -93,25 +94,25 @@ single_dose_clean <- function(ep_data, drug_separator = ",", overlap_threshold =
     dplyr::ungroup() %>%
     dplyr::select(patientid, linestartdate, lineenddate, linename) %>%
     dplyr::distinct()
-  
+
   # Remove merged or dropped lines from original
   lines_to_remove <- dplyr::bind_rows(
     to_merge %>% dplyr::select(patientid, linenumber),
     to_merge %>% dplyr::select(patientid, linenumber = target_line),
     ep_flagged %>% dplyr::filter(drop_line) %>% dplyr::select(patientid, linenumber)
   )
-  
+
   ep_retained <- ep_flagged %>%
     dplyr::anti_join(lines_to_remove, by = c("patientid", "linenumber")) %>%
     dplyr::select(patientid, linestartdate, lineenddate, linename)
-  
+
   # Combine retained + collapsed lines and renumber
   ep_final <- dplyr::bind_rows(ep_retained, collapsed_lines) %>%
     dplyr::arrange(patientid, linestartdate) %>%
     dplyr::group_by(patientid) %>%
     dplyr::mutate(linenumber = dplyr::row_number()) %>%
     dplyr::ungroup()
-  
+
   return(ep_final)
 }
 

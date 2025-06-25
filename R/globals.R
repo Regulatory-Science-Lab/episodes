@@ -1,0 +1,15 @@
+utils::globalVariables(c(
+  "Date_LastClinicalNote", "Date_LastContact", "Date_LastFollowUp",
+  "Date_TxEnd_PostReport", "after_death", "chemo_line", "days_to_death",
+  "days_to_progression", "death_date", "death_flag", "death_month",
+  "detaileddrugcategory", "dist", "drop_line", "episodedate", "event",
+  "first_line_start", "gender", "group_id", "is_single_day", "label",
+  "lineenddate", "lineenddate_off", "linename", "linenumber",
+  "linesetting", "linestartdate", "merge_with_next", "merge_with_prev",
+  "month_relative", "new_line", "next_gap", "next_linestart", "next_name",
+  "next_start", "next_state", "on_treatment", "overlaps_previous",
+  "parsemonthofdeath", "patientid", "prev_end", "prev_gap", "prev_name",
+  "prior_lines", "progression_date", "progression_state",
+  "progressiondate", "scale_lci", "scale_uci", "seg_end", "shape",
+  "shape_lci", "shape_uci", "state", "state_transition", "target_end",
+  "target_line", "target_name", "target_start", "time", "."))

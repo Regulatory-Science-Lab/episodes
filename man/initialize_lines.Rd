@@ -2,10 +2,16 @@
 % Please edit documentation in R/construct_state_episodes.R
 \name{initialize_lines}
 \alias{initialize_lines}
-\title{Initialize Line-Level Features}
+\title{Structure episodes for state transitions}
 \usage{
 initialize_lines(drug_episodes)
 }
+\arguments{
+\item{drug_episodes}{A data.frame of drug episode-level information with survival events.}
+}
+\value{
+structured dataframe with variables \code{next_start} and \code{chemo_line}
+}
 \description{
-Initialize Line-Level Features
+Structure episodes for state transitions
 }

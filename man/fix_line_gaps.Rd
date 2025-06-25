@@ -2,10 +2,17 @@
 % Please edit documentation in R/construct_state_episodes.R
 \name{fix_line_gaps}
 \alias{fix_line_gaps}
-\title{Make sure there are no gaps between line dates}
+\title{Adjust line end dates to remove gaps between sequential treatment segments}
 \usage{
 fix_line_gaps(drug_transitions)
 }
+\arguments{
+\item{drug_transitions}{A data.frame of line transitions, sorted by patient and time.}
+}
+\value{
+A data.frame with modified \code{lineenddate} to eliminate temporal gaps between treatment segments.
+}
 \description{
-Make sure there are no gaps between line dates
+Ensures continuity by setting the end date of a line to one day before the next line’s start date,
+if they do not already align.
 }

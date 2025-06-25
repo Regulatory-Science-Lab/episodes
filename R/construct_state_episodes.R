@@ -5,9 +5,6 @@
 #' from real-world treatment episode data, suitable for survival analysis or cost-effectiveness modeling.
 #'
 #' @param drug_episodes A data.frame of drug episode-level information with survival events.
-#' @param prog_on_cutoff Integer. Maximum negative offset allowed between progression and lineenddate.
-#' @param death_cutoff,progression_cutoff,next_line_cutoff Numeric thresholds used to define transitions.
-#'
 #' @return A data.frame of structured drug transitions.
 #' @importFrom dplyr filter mutate select transmute arrange group_by ungroup lead pull case_when bind_rows if_else summarise count
 #' @importFrom lubridate year month
@@ -59,6 +56,8 @@ construct_state_episodes <- function(drug_episodes) {
 }
 
 #' Adjust Dates in Drug Episode Data
+#' @param drug_episodes A data.frame of drug episode-level information with survival events.
+#' @return A data.frame of progression dates adjusted to prevent patients from progressing within a week
 adjust_dates <- function(drug_episodes) {
   drug_episodes %>%
     dplyr::mutate(
@@ -80,7 +79,9 @@ adjust_dates <- function(drug_episodes) {
     )
 }
 
-#' Initialize Line-Level Features
+#' Structure episodes for state transitions
+#' @param drug_episodes A data.frame of drug episode-level information with survival events.
+#' @return structured dataframe with variables `next_start` and `chemo_line`
 initialize_lines <- function(drug_episodes) {
   drug_episodes %>%
     dplyr::group_by(patientid) %>%
@@ -92,7 +93,9 @@ initialize_lines <- function(drug_episodes) {
     dplyr::ungroup()
 }
 
-#' Fix Deaths Before Progression
+#' Adjust incorrect death times
+#' @param lines formatted drug episodes data
+#' @return adjusted death dates dataframe
 fix_death_before_progression <- function(lines) {
   lines %>%
     dplyr::mutate(
@@ -104,7 +107,21 @@ fix_death_before_progression <- function(lines) {
     )
 }
 
-#' Build On-Treatment State
+#' Build on-treatment state transitions
+#'
+#' Identifies the on-treatment phase for patients on their chemo line and determines
+#' their next state (progression, death, or off-treatment). Also adjusts line end dates accordingly.
+#'
+#' @param lines A data.frame of line-level information including treatment dates and survival events.
+#' @param death_cutoff Days between line end and death to consider a direct transition to death.
+#' @param progression_cutoff Days between line end and progression to define direct progression.
+#' @param next_line_cutoff Days between line end and start of next line to define progression.
+#'
+#' @return A list with two elements:
+#'   \describe{
+#'     \item{on_treatment}{The full on-treatment data with next states and adjusted dates.}
+#'     \item{on_treatment_clean}{A reduced data.frame with only On_Treatment and Death states.}
+#'   }
 build_on_treatment <- function(lines, death_cutoff, progression_cutoff, next_line_cutoff) {
   on_treatment <- lines %>%
     dplyr::filter(linenumber == chemo_line) %>%
@@ -149,7 +166,16 @@ build_on_treatment <- function(lines, death_cutoff, progression_cutoff, next_lin
 }
 
 
-#' Build progression from on-treatment state
+#' Build progression events following on-treatment
+#'
+#' Constructs progression segments for patients who progressed after on-treatment. Includes logic for
+#' transitions to next-line treatment or death. Also returns any corresponding death segment.
+#'
+#' @param on_treatment A data.frame from `build_on_treatment()` containing patient states and next transitions.
+#' @param lines A data.frame of all line-level treatment data.
+#'
+#' @return A data.frame representing progression segments including Death where applicable.
+
 build_progression_from_on <- function(on_treatment, lines) {
 patients_progress <- on_treatment %>%
   dplyr::filter(next_state == "progression") %>%
@@ -232,7 +258,16 @@ progression <- dplyr::bind_rows(progression, death_progress)
 return(progression)
 }
 
-#' Build off-treatment from on-treatment
+#' Build off-treatment segments following on-treatment
+#'
+#' Identifies patients who transitioned to an off-treatment state after the on-treatment segment,
+#' and builds their subsequent progression or death timelines.
+#'
+#' @param on_treatment A data.frame from `build_on_treatment()` containing patient states and next transitions.
+#' @param lines A data.frame of all line-level treatment data.
+#'
+#' @return A data.frame with all off-treatment segments, including subsequent progression and death states.
+
 build_off_from_on <- function(on_treatment, lines) {
 
   patients_off <- on_treatment %>%
@@ -367,7 +402,14 @@ build_off_from_on <- function(on_treatment, lines) {
   return(off_treatment)
 }
 
-#' Make sure there are no gaps between line dates
+#' Adjust line end dates to remove gaps between sequential treatment segments
+#'
+#' Ensures continuity by setting the end date of a line to one day before the next line’s start date,
+#' if they do not already align.
+#'
+#' @param drug_transitions A data.frame of line transitions, sorted by patient and time.
+#'
+#' @return A data.frame with modified `lineenddate` to eliminate temporal gaps between treatment segments.
 fix_line_gaps <- function(drug_transitions) {
   drug_transitions <- drug_transitions %>%
     dplyr::arrange(patientid, linestartdate) %>%

@@ -6,6 +6,12 @@
 \usage{
 adjust_dates(drug_episodes)
 }
+\arguments{
+\item{drug_episodes}{A data.frame of drug episode-level information with survival events.}
+}
+\value{
+A data.frame of progression dates adjusted to prevent patients from progressing within a week
+}
 \description{
 Adjust Dates in Drug Episode Data
 }

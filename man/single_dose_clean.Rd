@@ -7,15 +7,15 @@
 single_dose_clean(ep_data, drug_separator = ",", overlap_threshold = 1)
 }
 \arguments{
+\item{ep_data}{data frame containing line-level treatment data. Must include
+columns: \code{patientid}, \code{linestartdate}, \code{lineenddate}, \code{linenumber}, \code{linename}.}
+
 \item{drug_separator}{A character string used to split multiple drugs in \code{linename}.
 Default is ",".}
 
 \item{overlap_threshold}{An integer indicating the minimum number of overlapping
 drugs between line names required to consider lines similar enough to merge.
 Default is 1.}
-
-\item{ep_dataA}{data frame containing line-level treatment data. Must include
-columns: \code{patientid}, \code{linestartdate}, \code{lineenddate}, \code{linenumber}, \code{linename}.}
 }
 \value{
 A cleaned \code{data.frame} with the same columns (\code{patientid}, \code{linestartdate},
@@ -31,6 +31,7 @@ It supports threshold-based partial overlap merging and reconstructs treatment
 episodes by recomputing line numbers after merging or dropping.
 }
 \examples{
+\dontrun{
 cleaned_lines <- single_dose_clean(ep_data)
-
+}
 }
