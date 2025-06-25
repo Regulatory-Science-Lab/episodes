@@ -4,54 +4,76 @@ library(tarchetypes)
 tar_option_set(
   packages = c(
     "dplyr", "tidyr", "haven", "openxlsx", "glue",
-    "lubridate", "purrr", "survival", "flexsurv"),
+    "lubridate", "purrr", "survival", "flexsurv", "episodes"
+  ),
   imports = "episodes"
 )
 
-# Load tumour definitions passed in via env var
-tumour_path <- Sys.getenv("TUMOUR_PATH", unset = NA)
-
-if (is.na(tumour_path) || !file.exists(tumour_path)) {
-  stop("TUMOUR_PATH env var not set or file does not exist.")
-}
-
-tumour_defs <- readRDS(tumour_path)
-
 list(
 
+  # Step 0: Track the .rds file itself
+  tar_target(
+    tumour_path,
+    Sys.getenv("TUMOUR_PATH", unset = NA),
+    format = "file"
+  ),
+
+  # Step 1: Load tumour_defs from the tracked file path
+  tar_target(
+    tumour_defs,
+    {
+      if (is.na(tumour_path) || !file.exists(tumour_path)) {
+        stop("TUMOUR_PATH env var not set or file does not exist.")
+      }
+      tumour_data <- readRDS(tumour_path)
+      stopifnot(is.data.frame(tumour_data))
+      tumour_data
+    }
+  ),
+
+  # Step 2: Dynamic branching over rows
+  tar_target(
+    tumour_row,
+    tumour_defs,
+    pattern = map(tumour_defs),
+    iteration = "list"
+  ),
+
+  # Step 3: Process each row
   tar_target(
     tumour_outputs,
     {
-      tumour <- tumour_defs$tumour
-      treatment <- tumour_defs$treatment
-      exact <- tumour_defs$exact
-
       drug_episodes <- prep_episode_data(
-        tumour = tumour,
-        treatment = treatment,
+        tumour = tumour_row$tumour,
+        treatment = tumour_row$treatment,
         drug_separator = ",",
         overlap_threshold = 1,
-        exact = exact
+        exact = tumour_row$exact
       )
 
       state_data <- construct_state_episodes(drug_episodes)
 
-      weibull_params <- state_exit_weibull_estimates(state_data$drug_transitions, state_data$lines)
+      weibull_params <- state_exit_weibull_estimates(
+        state_data$drug_transitions,
+        state_data$lines
+      )
+
       state_summary  <- state_numbers_summary(state_data$drug_transitions)
       death_table    <- death_table(state_data$drug_transitions)
 
       list(
-        tumour = tumour,
-        treatment = treatment,
+        tumour = tumour_row$tumour,
+        treatment = tumour_row$treatment,
         weibull_params = weibull_params,
         state_summary = state_summary,
         death_table = death_table
       )
     },
-    pattern = map(tumour_defs),
+    pattern = map(tumour_row),
     iteration = "list"
   ),
 
+  # Step 4: Final output
   tar_target(
     combined_excel_output,
     {
@@ -65,10 +87,9 @@ list(
 
       timestamp <- format(Sys.time(), "%Y%m%d_%H%M")
       out_path <- glue::glue("H:/PREDiCText/nirupama/weibull_estimates/01_public_parameters_updatedNTGC_{timestamp}.xlsx")
-
       openxlsx::saveWorkbook(wb, out_path, overwrite = FALSE)
-      message(glue::glue("Saved output to: {out_path}"))
       out_path
-    }
+    },
+    cue = tar_cue(mode = "always")
   )
 )

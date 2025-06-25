@@ -115,5 +115,27 @@ death_table <- function(drug_transitions, flatiron = TRUE) {
     dplyr::left_join(summary_table_death, by = c("month_relative" = "death_month")) %>%
     dplyr::mutate(dplyr::across(where(is.numeric), ~ tidyr::replace_na(., 0)))
 
+  # Order columns
+  desired_cols <- c("month_relative", "N_off_F", "N_on_F", "N_on_M", "N_p_F", "N_off_M", "N_p_M",
+                   "N_off_D", "N_on_D", "N_p_D")
+
+  death_table <- death_table %>%
+    tibble::as_tibble()
+
+  for (col in desired_cols) {
+    if (!col %in% names(death_table)) {
+      death_table[[col]] <- 0
+    }
+  }
+
+
+  death_table <- death_table %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(
+      !!!purrr::map(setdiff(desired_cols, names(.)), ~ 0)
+    ) %>%
+    dplyr::select(all_of(desired_cols))
+
+
   return(death_table)
 }

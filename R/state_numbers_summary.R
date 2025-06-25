@@ -75,5 +75,27 @@ state_numbers_summary <- function(drug_transitions, flatiron = TRUE) {
   summary_table$N_prop_F <- n_sex_prop$n[n_sex_prop$gender == "F"]
   summary_table$N_prop_M <- n_sex_prop$n[n_sex_prop$gender == "M"]
 
+  desired_cols <- c(
+    "N_on_to_death", "N_on_to_off", "N_on_to_prog",
+    "N_off_to_death", "N_off_to_prog", "N_prog_to_death",
+    "N_total", "N_prop_F", "N_prop_M"
+  )
+
+  summary_table <- summary_table %>%
+    tibble::as_tibble()
+
+  for (col in desired_cols) {
+    if (!col %in% names(summary_table)) {
+      summary_table[[col]] <- 0
+    }
+  }
+
+  summary_table <- summary_table %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(
+      !!!purrr::map(setdiff(desired_cols, names(.)), ~ 0)
+    ) %>%
+    dplyr::select(all_of(desired_cols))
+
   return(summary_table)
 }

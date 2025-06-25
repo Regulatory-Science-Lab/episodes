@@ -4,7 +4,7 @@
 #' @param dir Path to directory where the RDS file should be saved.
 #'
 #' @export
-run_pipeline <- function(tumours, dir = "") {
+run_episodes_pipeline <- function(tumours, dir = "") {
   stopifnot(all(c("tumour", "treatment", "exact") %in% colnames(tumours)))
 
   # Create the directory if it doesn't exist
