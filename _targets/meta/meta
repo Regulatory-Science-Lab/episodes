@@ -2,15 +2,15 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 tumour_row_1f19e8f746f4132b|branch|35617b2dd155ba01|f1fd8cfb1b7e0d3c|2c530c1562a7fbd1|-710107315||t20264.7661561195s|s176b|176|rds|local|list|tumour_row||0||
 tumour_row_a25e230eb8bbf55d|branch|ad7c50f418648586|f1fd8cfb1b7e0d3c|2c530c1562a7fbd1|1421752467||t20264.7661564811s|s170b|170|rds|local|list|tumour_row||0||
 tumour_row_584f9bfba78c65b7|branch|edff03f2e9998f1f|f1fd8cfb1b7e0d3c|2c530c1562a7fbd1|1502478076||t20264.7661568428s|s173b|173|rds|local|list|tumour_row||0||
-tumour_outputs_996377e7133e94b0|branch|5334298c52c66e00|8e3446194889bf5d|b2339524b72ed0a1|-347555931||t20264.7667478113s|s2464b|2464|rds|local|list|tumour_outputs||50.91||
-tumour_outputs_4f07fdd46e208257|branch|5d0438f6b8b8d3bf|8e3446194889bf5d|591c7cd365982b53|-2058333313||t20264.7670459965s|s1779b|1779|rds|local|list|tumour_outputs||25.69||
-tumour_outputs_1a643617d7cd953f|branch|705b01c2cb24d905|8e3446194889bf5d|4c763f1231ae60b6|-1034660154||t20264.767167014s|s1230b|1230|rds|local|list|tumour_outputs||10.42|There was 1 warning in `dplyr::summarise()`. ℹ In argument: `progression_date = min(progressiondate)`. Caused by warning in `min.default()`: ! no non-missing arguments to min; returning Inf|
 tumour_outputs|pattern|b4a9826d57fae065|8e3446194889bf5d||-1874221929||||5473|rds|local|list||tumour_outputs_996377e7133e94b0*tumour_outputs_4f07fdd46e208257*tumour_outputs_1a643617d7cd953f|87.02||
 tumour_row_48146731e8605185|branch|96ec9bd0a450c71a|f1fd8cfb1b7e0d3c|2c530c1562a7fbd1|-261092441||t20264.7677997934s|s166b|166|rds|local|list|tumour_row||0||
 tumour_outputs_ee80fe0104066f68|branch||8e3446194889bf5d|a98cdf4f26d8d3c0|-933484949||t20264.7680616093s||0|rds|local|list|tumour_outputs||22.42|There was 1 warning in `dplyr::summarise()`. ℹ In argument: `chemo_line = min(linenumber)`. Caused by warning in `min()`: ! no non-missing arguments to min; returning Inf. Returning more (or less) than 1 row per `summarise()` group was deprecated in dplyr 1.1.0. ℹ Please use `reframe()` instead. ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`   always returns an ungrouped data frame and adjust accordingly. ℹ The deprecated feature was likely used in the episodes package.   Please report the issue at <https://github.com/ntmv/episodes/issues>.. There was 1 warning in `dplyr::summarise()`. ℹ In argument: `progression_date = min(progressiondate)`. Caused by warning in `min.default()`: ! no non-missing arguments to min; returning Inf|ℹ In argument: `complete(data = pick(everything()), ..., fill = fill,   explicit = explicit)`. Caused by error in `seq.int()`: ! 'from' must be a finite number
+tumour_defs|stem|c0aa267d54950910|51522c0eaa6c0ccd|d4d3ab1910ec0ac9|-2021367941||t20264.7684996679s|s210b|210|rds|local|vector||tumour_defs_f06241b667452a6e*tumour_defs_4ad71617f50e20ad*tumour_defs_9b4b9c88a0d6d057|0||
+tumour_row|pattern|27a50bf1758c6601|f1fd8cfb1b7e0d3c||-2107703943||||0|rds|local|list||tumour_row_1f19e8f746f4132b*tumour_row_a25e230eb8bbf55d*tumour_row_584f9bfba78c65b7|0||
 build_progression_from_on|function|c66c156b693a995a
 collapse_overlapping_lines|function|eea973d0d781b7d3
 single_dose_clean|function|278f245257e7a9ce
+.__global__|object|da3230a68a7fcb91
 km_fit|function|f338ca8fe87800c4
 run_episodes_pipeline|function|f898157d9d853507
 build_on_treatment|function|f95aaa0a529eb832
@@ -29,7 +29,8 @@ write_death_table|function|4038b8828092548e
 write_shape_scale|function|1aaa7ba5adf95dd0
 write_summary|function|fa44f7757764bdc0
 construct_state_episodes|function|372e34efecdf5898
-tumour_path|stem|c0aa267d54950910|7cf9579160171908|2c530c1562a7fbd1|-1749060554|H:\PREDiCText\nirupama\weibull_estimates\tumour_defs.rds|t20264.7684819015s|s210b|210|file|local|vector|||0.05|package 'dplyr' was built under R version 4.4.3. package 'tidyr' was built under R version 4.4.3. package 'haven' was built under R version 4.4.3. package 'openxlsx' was built under R version 4.4.3. package 'glue' was built under R version 4.4.3. package 'lubridate' was built under R version 4.4.3. package 'purrr' was built under R version 4.4.3. package 'survival' was built under R version 4.4.3. package 'flexsurv' was built under R version 4.4.3|
-tumour_defs|stem|c0aa267d54950910|51522c0eaa6c0ccd|d4d3ab1910ec0ac9|-2021367941||t20264.7684996679s|s210b|210|rds|local|vector||tumour_defs_f06241b667452a6e*tumour_defs_4ad71617f50e20ad*tumour_defs_9b4b9c88a0d6d057|0||
-tumour_row|pattern|27a50bf1758c6601|f1fd8cfb1b7e0d3c||-2107703943||||0|rds|local|list||tumour_row_1f19e8f746f4132b*tumour_row_a25e230eb8bbf55d*tumour_row_584f9bfba78c65b7|0||
-combined_excel_output|stem|cdf53ceb737916c9|883adc7edfe8e2e1|df4937b3e1054482|1743634156||t20264.7685145163s|s176b|176|rds|local|vector|||1.04||
+tumour_path|stem|c0aa267d54950910|7cf9579160171908|2c530c1562a7fbd1|-1749060554|H:\PREDiCText\nirupama\weibull_estimates\tumour_defs.rds|t20264.7901196083s|s210b|210|file|local|vector|||0.05|package 'dplyr' was built under R version 4.4.3. package 'tidyr' was built under R version 4.4.3. package 'haven' was built under R version 4.4.3. package 'openxlsx' was built under R version 4.4.3. package 'glue' was built under R version 4.4.3. package 'lubridate' was built under R version 4.4.3. package 'purrr' was built under R version 4.4.3. package 'survival' was built under R version 4.4.3. package 'flexsurv' was built under R version 4.4.3|
+tumour_outputs_996377e7133e94b0|branch|5334298c52c66e00|c1b9b1c4a0f129a8|8e00be345f42f882|-347555931||t20264.7907244965s|s2464b|2464|rds|local|list|tumour_outputs||50.55||
+tumour_outputs_4f07fdd46e208257|branch|5d0438f6b8b8d3bf|c1b9b1c4a0f129a8|a9c1bead23c49faf|-2058333313||t20264.7910008688s|s1779b|1779|rds|local|list|tumour_outputs||23.85||
+tumour_outputs_1a643617d7cd953f|branch|705b01c2cb24d905|c1b9b1c4a0f129a8|394e3883fdfa4485|-1034660154||t20264.7911039718s|s1230b|1230|rds|local|list|tumour_outputs||8.84|There was 1 warning in `dplyr::summarise()`. ℹ In argument: `progression_date = min(progressiondate)`. Caused by warning in `min.default()`: ! no non-missing arguments to min; returning Inf|
+combined_excel_output|stem|2112b32ec0b5bbd7|883adc7edfe8e2e1|df4937b3e1054482|1743634156||t20264.791116839s|s177b|177|rds|local|vector|||1.08||

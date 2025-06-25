@@ -77,6 +77,9 @@ list(
       state_summary  <- state_numbers_summary(state_data$drug_transitions)
       death_table    <- death_table(state_data$drug_transitions)
 
+      km_curve <- km_fit(state_data$drug_transitions,
+              state_data$lines, tumour_row$tumour)
+
       list(
         tumour = tumour_row$tumour,
         treatment = tumour_row$treatment,
