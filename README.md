@@ -31,11 +31,11 @@ The episodes pipeline can be run in a single line with the `run_episodes_pipelin
 
 ```r
 run_episodes_pipeline(
-  tibble::tibble(
-    tumour = c("nsclc", "breast"),
-    treatment = c("cisplatin|carboplatin", "capecitabine"),
-    exact = c(FALSE, TRUE)
-  ), dir = "YOUR DIRECTORY TO SAVE RESULTS"
+    tibble::tibble(
+        tumour = c("nsclc", "breast", "pancreatic", "thyroid", "crc"),
+        treatment = c("cisplatin|carboplatin", "capecitabine", "gemcitabine","cabozantinib", "folfiri"),
+        exact = c(FALSE, TRUE, TRUE, TRUE)
+    ), dir = "YOUR DIRECTORY"
 )
 ```
 where `exact` represents whether we want to search for a combination of drugs (`exact = FALSE`) or only the specific treatment given by itself (`exact = TRUE`).
