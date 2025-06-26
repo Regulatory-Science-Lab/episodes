@@ -64,8 +64,18 @@ state_exit_weibull_estimates <- function(drug_transitions, lines) {
     }, error = function(e) NULL)
 
     if (is.null(fit)) {
-      covariates = "prior_lines"
-      formula <- stats::as.formula(paste("Surv(time, event) ~", paste(covariates, collapse = "+")))
+      covariates <- "prior_lines"
+
+      # Drop covariate if it doesn't have >1 level
+      covariates <- covariates[sapply(covariates, function(var) {
+        n_vals <- length(unique(df[[var]]))
+        n_vals > 1 && !all(is.na(df[[var]]))
+      })]
+
+      formula <- stats::as.formula(
+        paste("Surv(time, event) ~", if (length(covariates) > 0) paste(covariates, collapse = "+") else "1")
+      )
+
       fit <- tryCatch({
         flexsurv::flexsurvreg(formula, data = df, dist = "weibull")
       }, error = function(e) NULL)
@@ -99,6 +109,8 @@ state_exit_weibull_estimates <- function(drug_transitions, lines) {
 
   results <- results %>%
     dplyr::arrange(dplyr::desc(state_transition == "On_Treatment_Target_Line"), state_transition)
+
+  results <- na.omit(results)
 
   return(results)
 }

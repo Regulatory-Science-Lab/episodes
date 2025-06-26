@@ -31,6 +31,25 @@
 
 prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplatin", drug_separator = ",",
                               overlap_threshold = 1, exact = FALSE) {
+  if(tumour == "thyroid") {
+   tumour_data <- read.csv("H://PREDiCText//nirupama//weibull_estimates//thyroid_episodes.csv")
+   drug_episodes <- tumour_data %>%
+     tidyr::drop_na(linenumber) %>%
+     dplyr::group_by(patientid, linenumber) %>%
+     dplyr::summarise(
+       linename = dplyr::first(linename),
+       linestartdate = min(linestartdate),
+       lineenddate = max(episodedate),
+       .groups = 'drop'
+     ) %>%
+     dplyr::distinct() %>%
+     dplyr::arrange(patientid, linenumber) %>%
+     dplyr::mutate(
+       linestartdate = lubridate::ymd(linestartdate),
+       lineenddate   = lubridate::ymd(lineenddate)
+     )
+
+  } else{
   # Load round 1 and round 4 drug episode data
   tumour_ep_round1 <- haven::read_dta(glue::glue("H:\\PREDiCText\\lingyi\\Flatiron_exploratory_round1and4\\DrugEpisodes\\DrugEpisode_{tumour}_round1.dta"))
   tumour_ep_round4 <- haven::read_dta(glue::glue("H:\\PREDiCText\\lingyi\\Flatiron_exploratory_round1and4\\DrugEpisodes\\DrugEpisode_{tumour}_round4.dta"))
@@ -58,6 +77,7 @@ prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplat
       linestartdate = lubridate::ymd(linestartdate),
       lineenddate   = lubridate::ymd(lineenddate)
     )
+  }
 
   n_adv <- length(unique(drug_episodes$patientid))
   message(glue::glue("The total number of {tumour} patients is {n_adv}"))
