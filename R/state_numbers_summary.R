@@ -32,7 +32,8 @@ state_numbers_summary <- function(drug_transitions, flatiron = TRUE) {
   flatiron_data <- haven::read_dta("H://PREDiCText//lingyi//Flatiron_exploratory_round1and4//Demographics//Demographics_allDataSets_round1and4.dta")
 
   flatiron_data <- flatiron_data %>%
-    dplyr::select(patientid, gender) %>%
+    dplyr::mutate(age = max(year(flatiron_data$datacutoffdate))-birthyear) %>%
+    dplyr::select(patientid, gender, age) %>%
     dplyr::distinct(patientid, .keep_all = TRUE)
 
   drug_transitions <- drug_transitions %>%
@@ -71,14 +72,19 @@ state_numbers_summary <- function(drug_transitions, flatiron = TRUE) {
     dplyr::group_by(gender) %>%
     dplyr::summarise(n = n()/length(unique(drug_transitions$patientid)))
 
+  # Median age
+  n_age <- drug_transitions %>%
+    dplyr::summarise(median_age = median(age))
+
   summary_table$N_total <- length(unique(drug_transitions$patientid))
   summary_table$N_prop_F <- n_sex_prop$n[n_sex_prop$gender == "F"]
   summary_table$N_prop_M <- n_sex_prop$n[n_sex_prop$gender == "M"]
+  summary_table$median_age <- n_age$median_age
 
   desired_cols <- c(
     "N_on_to_death", "N_on_to_off", "N_on_to_prog",
     "N_off_to_death", "N_off_to_prog", "N_prog_to_death",
-    "N_total", "N_prop_F", "N_prop_M"
+    "N_total", "N_prop_F", "N_prop_M", "median_age"
   )
 
   summary_table <- summary_table %>%

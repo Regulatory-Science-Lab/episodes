@@ -49,7 +49,30 @@ prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplat
        lineenddate   = lubridate::ymd(lineenddate)
      )
 
-  } else{
+  } else if(tumour == "sarcoma") {
+    tumour_data <- read.csv("H://PREDiCText//nirupama//weibull_estimates//sarcoma_episodes.csv")
+
+    drug_episodes <- tumour_data %>%
+      tidyr::drop_na(linenumber) %>%
+      dplyr::group_by(patientid, linenumber) %>%
+      dplyr::summarise(
+        linename = dplyr::first(linename),
+        linestartdate = min(linestartdate),
+        lineenddate = max(episodedate),
+        .groups = 'drop'
+      ) %>%
+      dplyr::distinct() %>%
+      dplyr::arrange(patientid, linenumber) %>%
+      dplyr::mutate(
+        linestartdate = lubridate::ymd(linestartdate),
+        lineenddate   = lubridate::ymd(lineenddate)
+
+      )
+
+    drug_episodes <- drug_episodes %>%
+      dplyr::mutate(
+        linename = gsub(",\\s*", ",", tolower(linename))  # removes spaces after commas
+      )} else {
   # Load round 1 and round 4 drug episode data
   tumour_ep_round1 <- haven::read_dta(glue::glue("H:\\PREDiCText\\lingyi\\Flatiron_exploratory_round1and4\\DrugEpisodes\\DrugEpisode_{tumour}_round1.dta"))
   tumour_ep_round4 <- haven::read_dta(glue::glue("H:\\PREDiCText\\lingyi\\Flatiron_exploratory_round1and4\\DrugEpisodes\\DrugEpisode_{tumour}_round4.dta"))
@@ -158,6 +181,10 @@ prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplat
   n_single_dose <- length(unique(drug_episodes$patientid))
   message(glue::glue("The total number of {tumour} patients with single doses that were filtered out is {n_single_dose}"))
 
+  drug_episodes <- drug_episodes %>%
+    dplyr::mutate(
+      linename = gsub(",\\s*", ",", tolower(linename)))
+
   # Tag chemotherapy line
   chemo_lines <- drug_episodes %>%
     dplyr::filter(stringr::str_detect(tolower(linename), treatment)) %>%
@@ -177,10 +204,17 @@ prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplat
 
   # Load death and follow-up data
   last_contact_data <- haven::read_dta("H:\\PREDiCText\\ek\\Flatiron_data_prep\\1_Dates_E_LastContact.dta")
+  if (tumour %in% c("sarcoma", "thyroid")) {
+    mort_dat <- read.table("H:\\PREDiCText\\lingyi\\all unzipped round1and4\\roche_cg_pan_tumor_enhanced_2024-03-31\\Enhanced_Mortality_V2.txt", header = TRUE,
+                           sep = "|") %>%
+      dplyr::arrange(parsemonthofdeath) %>%
+      dplyr::group_by(patientid) %>%
+      dplyr::slice(1)
+  } else {
   mort_dat <- haven::read_dta("H:\\PREDiCText\\lingyi\\Flatiron_exploratory_round1and4\\DeathDates\\DeathDates_AllDataSets_round1and4.dta") %>%
     dplyr::arrange(parsemonthofdeath) %>%
     dplyr::group_by(patientid) %>%
-    dplyr::slice(1)
+    dplyr::slice(1) }
 
   # Merge death info and coalesce date
   last_contact_data <- last_contact_data %>%
