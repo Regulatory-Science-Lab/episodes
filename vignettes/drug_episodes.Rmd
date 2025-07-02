@@ -1,8 +1,8 @@
 ---
-title: "Constructing drug episodes and deriving Weibull transition estimates:Assumptions and Workflow"
+title: "Constructing drug episodes and deriving Weibull transition estimates: Assumptions and Workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Constructing drug episodes and deriving Weibull transition estimates:Assumptions and Workflow}
+  %\VignetteIndexEntry{Constructing drug episodes and deriving Weibull transition estimates: Assumptions and Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
