@@ -25,3 +25,7 @@ Imports:
     targets,
     tibble,
     tidyr
+Suggests:
+    knitr,
+    rmarkdown
+
