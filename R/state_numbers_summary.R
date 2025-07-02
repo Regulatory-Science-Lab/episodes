@@ -74,17 +74,19 @@ state_numbers_summary <- function(drug_transitions, flatiron = TRUE) {
 
   # Median age
   n_age <- drug_transitions %>%
+    dplyr::group_by(gender) %>%
     dplyr::summarise(median_age = median(age))
 
   summary_table$N_total <- length(unique(drug_transitions$patientid))
   summary_table$N_prop_F <- n_sex_prop$n[n_sex_prop$gender == "F"]
   summary_table$N_prop_M <- n_sex_prop$n[n_sex_prop$gender == "M"]
-  summary_table$median_age <- n_age$median_age
+  summary_table$median_age_F <- n_age$median_age[n_age$gender == "F"]
+  summary_table$median_age_M <- n_age$median_age[n_age$gender == "M"]
 
   desired_cols <- c(
     "N_on_to_death", "N_on_to_off", "N_on_to_prog",
     "N_off_to_death", "N_off_to_prog", "N_prog_to_death",
-    "N_total", "N_prop_F", "N_prop_M", "median_age"
+    "N_total", "N_prop_F", "N_prop_M", "median_age_F", "median_age_M"
   )
 
   summary_table <- summary_table %>%

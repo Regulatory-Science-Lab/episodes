@@ -1,7 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>/404.html</loc></url>
 <url><loc>/articles/drug_episodes.html</loc></url>
+<url><loc>/articles/drug_episodes_breast.html</loc></url>
+<url><loc>/articles/drug_episodes_crc.html</loc></url>
 <url><loc>/articles/drug_episodes_lung.html</loc></url>
+<url><loc>/articles/drug_episodes_pancreatic.html</loc></url>
+<url><loc>/articles/drug_episodes_sarcoma.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>

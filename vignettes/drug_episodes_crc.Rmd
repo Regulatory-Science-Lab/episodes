@@ -1,0 +1,341 @@
+---
+title: "Constructing drug episodes for CRC (FOLFIRI)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Constructing drug episodes for CRC (FOLFIRI)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(episodes)
+library(dplyr)
+library(lubridate)
+library(purrr)
+```
+
+## Sample Size Breakdown
+
+```{r echo = FALSE}
+# Drug episodes for lung
+drug_episodes <- prep_episode_data(tumour = "crc", treatment = "folfiri", drug_separator = ",",
+                              overlap_threshold = 1)
+
+state_transitions <- construct_state_episodes(drug_episodes)
+
+drug_transitions <- state_transitions$drug_transitions
+```
+
+## Descriptive statistics of episodes stratified by line and state
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+library(lubridate)
+
+
+# Step 1: Prepare data
+summary_data <- drug_transitions %>%
+  arrange(patientid, linestartdate) %>%
+  group_by(patientid) %>%
+  mutate(
+    state_clean = state,
+    next_state = lead(state_clean),
+    died = any(state_clean == "Death"),
+    is_last = row_number() == n(),
+    
+    # Safe death_censor assignment
+    death_censor = if_else(!is.na(next_state) & next_state == "Death", 1, 0),
+    
+    # Admin censor if last row and not died and not going to next line
+    admin_censor = if_else(
+      is_last & !died & state_clean != "On_Treatment_Next_Line", 
+      1, 0
+    ),
+    
+    duration_days = as.numeric(lineenddate - linestartdate)
+  ) %>%
+  ungroup() %>%
+  filter(!(state_clean %in% c("Death", "On_Treatment_Next_Line")))  
+ 
+
+# Step 2: Updated summary function
+summarize_group <- function(df) {
+  tibble(
+    N = length(unique(df$patientid)),
+    Mean = round(mean(df$duration_days, na.rm = TRUE), 1),
+    Median = round(median(df$duration_days, na.rm = TRUE), 1),
+    Q1 = round(quantile(df$duration_days, 0.25, na.rm = TRUE), 1),
+    Q3 = round(quantile(df$duration_days, 0.75, na.rm = TRUE), 1),
+    `Death Censoring` = paste0(sum(df$death_censor), " (", round(100 * mean(df$death_censor), 1), "%)"),
+    `Admin Censoring` = paste0(sum(df$admin_censor), " (", round(100 * mean(df$admin_censor), 1), "%)")
+  )
+}
+
+summary_by_line <- summary_data %>%
+  group_by(chemo_line, state) %>%
+  group_split() %>%
+  purrr::map_df(~ summarize_group(.x) %>%
+                  mutate(Group = paste0("Line ", unique(.x$chemo_line), " - ", unique(.x$state))),
+                .id = NULL)
+
+# Step 3b: Overall summary by state (not stratified by line)
+summary_overall <- summary_data %>%
+  group_by(state) %>%
+  group_split() %>%
+  purrr::map_df(~ summarize_group(.x) %>%
+                  mutate(Group = paste0("Overall - ", unique(.x$state))),
+                .id = NULL)
+
+# Step 3c: Combine both
+summary_table <- bind_rows(summary_by_line, summary_overall) %>%
+  select(Group, everything())
+
+
+knitr::kable(summary_table, caption = "Summary of Episode Duration by Line and State (Excl. Death State)")
+```
+
+# Cut-points 
+
+## Cumulative incidence functions of transitions out of each health state
+
+## Exit from on-treatment
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidycmprsk)
+library(ggplot2)
+library(survival)
+library(ggsurvfit)
+library(cmprsk)
+
+# Step 1: Prepare dataset to define transitions
+transitions <- drug_transitions %>%
+  arrange(patientid, linestartdate) %>%
+  group_by(patientid) %>%
+  mutate(
+    from_state = state,
+    from_date = linestartdate,
+    to_state = lead(state),
+    to_date = lead(linestartdate),
+    time_to_transition = as.numeric(to_date - from_date),
+    status = ifelse(!is.na(to_state), 1, 0)
+  ) %>%
+  ungroup() %>%
+  filter(!is.na(to_state))  # only rows with an actual transition
+
+# Step 2: Restrict to specific origin states (as requested)
+valid_from_states <- c("On_Treatment_Target_Line", "off_treatment", "progression")
+transitions <- transitions %>%
+  filter(from_state %in% valid_from_states)
+
+# Step 3: Clean up data and handle edge cases
+transitions <- transitions %>%
+  filter(
+    time_to_transition > 0,  # Remove negative or zero transition times
+    !is.na(time_to_transition)  # Remove missing transition times
+  ) %>%
+  mutate(
+    # Ensure to_state is a factor with proper levels
+    to_state = factor(to_state),
+    from_state = factor(from_state, levels = valid_from_states)
+  )
+
+# Check if we have data after filtering
+if(nrow(transitions) == 0) {
+  stop("No valid transitions found after filtering")
+}
+
+# Step 4: Create survival object and compute CIF
+# Note: For competing risks, event_code should start from 1 (not 0)
+transitions <- transitions %>%
+  mutate(
+    event_code = as.numeric(from_state)  # This will be 1, 2, 3, etc.
+  )
+
+cif_tidy <- transitions %>%
+  tidycmprsk::cuminc(Surv(time_to_transition, from_state) ~ to_state, data = .)
+
+
+
+# Step 1: Filter only from On_Treatment_Target_Line
+transitions_filtered <- transitions %>%
+  filter(from_state == "On_Treatment_Target_Line") %>%
+  mutate(
+    event_code = dplyr::case_when(
+      to_state == "off_treatment" ~ 1,
+      to_state == "progression" ~ 2,
+      to_state == "Death" ~ 3,
+      TRUE ~ 0  # Censored
+    )
+  )
+
+# Step 2: Run competing risks model
+cif <- cmprsk::cuminc(
+  ftime = transitions_filtered$time_to_transition,
+  fstatus = transitions_filtered$event_code
+)
+
+# Step 3: Plot it
+plot(cif, col = c("tomato", "steelblue", "darkgreen"), lwd = 3)
+legend("topright", legend = c("Off-Treatment", "Progression", "Death"), 
+       col = c("tomato", "steelblue", "darkgreen"), lwd = 4)
+
+
+
+```
+
+## Exit from progression
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggcuminc(cif_tidy, outcome = "progression", size = 1.5) +
+  scale_color_manual(values = c("steelblue", "darkgreen", "tomato", "purple")) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "top"
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 2)))
+```
+
+## Exit from Off-treatment
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggcuminc(cif_tidy, outcome = "off_treatment", size = 1.5) +
+  scale_color_manual(values = c("steelblue", "darkgreen", "tomato", "purple")) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "top"
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 2)))
+```
+
+## Restricted mean survival time survival: comparisons across lines
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(survRM2)
+
+os_data <- drug_transitions %>%
+  arrange(linestartdate) %>%
+  group_by(patientid) %>%
+  mutate(event = if_else(row_number() == n() & state == "Death", 1L, 0L)) %>%
+  summarise(linestartdate = min(linestartdate), lineenddate = max(lineenddate), event = max(event), chemo_line = first(chemo_line)) %>%
+  mutate(time = as.numeric(lineenddate - linestartdate))
+
+# Prep the data
+rmst_data <- os_data %>%
+  mutate(
+    time = as.numeric(lineenddate - linestartdate),
+    status = event
+  ) %>%
+  filter(!is.na(time), time >= 0)
+
+tau_80 <- quantile(rmst_data$time[rmst_data$status == 1], 0.8, na.rm = TRUE)
+
+
+unique_lines <- unique(rmst_data$chemo_line)
+comparisons <- list()
+
+for(i in 1:(length(unique_lines)-1)) {
+  for(j in (i+1):length(unique_lines)) {
+    line_i <- unique_lines[i]
+    line_j <- unique_lines[j]
+    
+    comparison_data <- rmst_data %>%
+      filter(chemo_line %in% c(line_i, line_j)) %>%
+      mutate(arm = if_else(chemo_line == line_i, 0, 1))
+    
+    if(nrow(comparison_data) > 0) {
+      result <- rmst2(
+        time = comparison_data$time,
+        status = comparison_data$status,
+        arm = comparison_data$arm,
+        tau = tau_80
+      )
+      
+      comparisons[[paste(line_i, "vs", line_j)]] <- list(
+        comparison = paste(line_i, "vs", line_j),
+        rmst_diff = result$unadjusted.result[1,1],
+        ci_lower = result$unadjusted.result[1,2],
+        ci_upper = result$unadjusted.result[1,3],
+        p_value = result$unadjusted.result[1,4],
+        rmst_line1 = result$RMST.arm0$rmst[1],
+        rmst_line2 = result$RMST.arm1$rmst[1]
+      )
+    }
+  }
+}
+
+# Convert to a nice table
+comparison_table <- map_dfr(comparisons, ~ tibble(
+  Comparison = .x$comparison,
+  RMST_Difference = round(.x$rmst_diff, 2),
+  CI_Lower = round(.x$ci_lower, 2),
+  CI_Upper = round(.x$ci_upper, 2),
+  P_Value = round(.x$p_value, 4),
+  RMST_Group1 = round(.x$rmst_line1, 2),
+  RMST_Group2 = round(.x$rmst_line2, 2)
+))
+
+
+knitr::kable(
+  comparison_table,
+  caption = "Restricted Mean Survival Time Comparisons Between Lines of Therapy",
+  col.names = c(
+    "Comparison",
+    "RMST Difference (days)",
+    "95% CI Lower",
+    "95% CI Upper",
+    "P-Value",
+    "RMST Group 1",
+    "RMST Group 2"
+  ),
+  align = "lrrrrrr",
+  format = "markdown"  
+)
+
+```
+
+## KM curve: time to death (overall survival)
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(survminer)
+
+km_fit_overall <- survfit(Surv(time, event) ~ 1, data = os_data)
+
+ggsurvplot(
+  km_fit_overall,
+  conf.int = TRUE,
+  risk.table = TRUE,
+  title = "Overall Survival Curve",
+  xlab = "Days Since Line Start",
+  ylab = "Survival Probability",
+  surv.median.line = "hv",
+  ggtheme = theme_minimal()
+)
+```
+
+## KM curve: time to death (stratified by line)
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+km_fit_strat <- survfit(Surv(time, event) ~ factor(chemo_line), data = os_data)
+
+ggsurvplot(
+  km_fit_strat,
+  conf.int = TRUE,
+  risk.table = TRUE,
+  title = "Survival Stratified by Line of Therapy",
+  xlab = "Days Since Line Start",
+  ylab = "Survival Probability",
+  surv.median.line = "hv",
+  ggtheme = theme_minimal(),
+  legend.title = "Chemo Line",
+  legend.labs = paste("Line", sort(unique(os_data$chemo_line)))
+)
+
+```
+
