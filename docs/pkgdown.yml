@@ -2,5 +2,5 @@ pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
-  drug_episodes_lung: drug_episodes_lung.html
-last_built: 2025-07-02T20:03Z
+  drug_episodes: drug_episodes.html
+last_built: 2025-07-02T20:16Z
