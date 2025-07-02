@@ -34,7 +34,7 @@ run_episodes_pipeline(
     tibble::tibble(
         tumour = c("nsclc", "breast", "pancreatic", "thyroid", "crc", "sarcoma"),
         treatment = c("cisplatin|carboplatin", "capecitabine", "gemcitabine","cabozantinib", "folfiri", "docetaxel,gemcitabine"),
-        exact = c(FALSE, TRUE, TRUE, TRUE)
+        exact = c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE)
     ), dir = "YOUR DIRECTORY"
 )
 ```
