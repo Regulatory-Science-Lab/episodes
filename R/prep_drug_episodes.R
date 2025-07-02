@@ -10,6 +10,7 @@
 #' @param drug_separator A character string separating multiple drugs in `linename`. Default is ",".
 #' @param overlap_threshold Integer: number of shared drugs required to collapse lines. Default = 1.
 #' @param exact boolean: to specify whether we want an exact match to the drug name or a combination therapy
+#' @param l2plus boolean: Lines only above L2 (L2 and L3) (Default = TRUE)
 #'
 #' @return A cleaned and filtered `data.frame` of drug episodes with progression, death, and follow-up dates integrated
 #' @importFrom dplyr filter mutate select summarise group_by ungroup arrange left_join distinct pull lead
@@ -30,7 +31,7 @@
 #' }
 
 prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplatin", drug_separator = ",",
-                              overlap_threshold = 1, exact = FALSE) {
+                              overlap_threshold = 1, exact = FALSE, l2plus = TRUE) {
   if(tumour == "thyroid") {
    tumour_data <- read.csv("H://PREDiCText//nirupama//weibull_estimates//thyroid_episodes.csv")
    drug_episodes <- tumour_data %>%
@@ -169,7 +170,10 @@ prep_episode_data <- function(tumour = "nsclc", treatment = "cisplatin|carboplat
   print(knitr::kable(summary_table, caption = glue::glue("Number of patients who received {treatment} by line of therapy")))
 
   # Combine all selected episodes
-  drug_episodes <- dplyr::bind_rows(drug_episodes_first_line, drug_episodes_second_line, drug_episodes_third_line)
+  if(l2plus) {
+  drug_episodes <- dplyr::bind_rows( drug_episodes_second_line, drug_episodes_third_line)
+  } else {
+  drug_episodes <- dplyr::bind_rows(drug_episodes_first_line, drug_episodes_second_line, drug_episodes_third_line)}
 
   # Remove overlapping lines
   drug_episodes <- collapse_overlapping_lines(ep_data = drug_episodes)
