@@ -32,8 +32,8 @@ The episodes pipeline can be run in a single line with the `run_episodes_pipelin
 ```r
 run_episodes_pipeline(
     tibble::tibble(
-        tumour = c("nsclc", "breast", "pancreatic", "thyroid", "crc"),
-        treatment = c("cisplatin|carboplatin", "capecitabine", "gemcitabine","cabozantinib", "folfiri"),
+        tumour = c("nsclc", "breast", "pancreatic", "thyroid", "crc", "sarcoma"),
+        treatment = c("cisplatin|carboplatin", "capecitabine", "gemcitabine","cabozantinib", "folfiri", "docetaxel,gemcitabine"),
         exact = c(FALSE, TRUE, TRUE, TRUE)
     ), dir = "YOUR DIRECTORY"
 )
