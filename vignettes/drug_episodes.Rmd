@@ -23,7 +23,7 @@ The first function in the package workflow is `prep_episode_data`. This is used 
 The function can take in a regular so for example, for lung we match to either cisplatin or carboplatin (as they are often interchanged in the protocols). `exact = TRUE` can be specified to match exactly that treatment without any combination of other drugs. For lung, we specify `exact = FALSE` as cisplatin and carobplatin is rarely given alone. However, for all ohter tumours for which we have produced drug episodes we match exactly to the treatment name. 
 
 
-```{r}
+```{r eval = FALSE}
 drug_episodes <- prep_episode_data(tumour = "nsclc", treatment = "cisplatin|carboplatin", drug_separator = ",",
                               overlap_threshold = 1, exact = FALSE)
 
@@ -103,7 +103,7 @@ In the Flatiron dataset, we only have the month and year of death for the patien
 
 The `construct_state_episodes` function can be used to construct the drug episodes into a form which can be fed into the Weibull models to derive the sojourn survival time. It takes in the cleaned output from `prep_episodes_data`.
 
-```{r}
+```{r eval = FALSE}
 state_episodes <- construct_state_episodes(drug_episodes)
 
 drug_transitions <- state_episodes$drug_transitions
@@ -117,7 +117,7 @@ To derive the shape and scale parameters, we use a Weibull model with the accele
 
 In all three regressions, we adjust for the number of prior lines (unless all the patients have no prior lines). For the exit from progression, we also have a binary indicator variable (`LoT_progression` with teo levels `LoT` and `clinical`) to control for the fact that progression was derived for some patients clinically through the progression date and inferred for others through a change in line. This is to control for the artifact that patients that were proxied to be progressed by a change in line of therapy will likely stay in the progression state for a longer period of time.
 
-```{r}
+```{r eval = FALSE}
 params_results <- state_exit_weibull_estimates(drug_transitions, lines)
 
 params_results

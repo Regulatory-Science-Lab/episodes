@@ -86,25 +86,25 @@
 <span><span class="co">## |First Line      |               9333|</span></span>
 <span><span class="co">## |Second Line     |               1016|</span></span>
 <span><span class="co">## |Third Line      |                324|</span></span></code></pre>
-<pre><code><span><span class="co">## The total number of nsclc patients with overlapping lines that were filtered out is 10673</span></span></code></pre>
-<pre><code><span><span class="co">## The total number of nsclc patients with single doses that were filtered out is 10022</span></span></code></pre>
-<pre><code><span><span class="co">## The total number of nsclc patients with treatment start pre-2010 that were filtered out is 20</span></span></code></pre>
+<pre><code><span><span class="co">## The total number of nsclc patients with overlapping lines that were filtered out is 1340</span></span></code></pre>
+<pre><code><span><span class="co">## The total number of nsclc patients with single doses that were filtered out is 1338</span></span></code></pre>
+<pre><code><span><span class="co">## The total number of nsclc patients with treatment start pre-2010 that were filtered out is 1</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Table: Filtered Transition Counts Table</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## |state                    |next_state    |    n|</span></span>
-<span><span class="co">## |:------------------------|:-------------|----:|</span></span>
-<span><span class="co">## |Death                    |NA            | 6854|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |Death         |  167|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |off_treatment | 3161|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |progression   | 6237|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |NA            |  278|</span></span>
-<span><span class="co">## |off_treatment            |Death         | 1292|</span></span>
-<span><span class="co">## |off_treatment            |progression   |  999|</span></span>
-<span><span class="co">## |off_treatment            |NA            |  870|</span></span>
-<span><span class="co">## |progression              |Death         | 5395|</span></span>
-<span><span class="co">## |progression              |NA            | 1841|</span></span></code></pre>
+<span><span class="co">## |state                    |next_state    |   n|</span></span>
+<span><span class="co">## |:------------------------|:-------------|---:|</span></span>
+<span><span class="co">## |Death                    |NA            | 880|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |Death         |  18|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |off_treatment | 371|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |progression   | 803|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |NA            |  45|</span></span>
+<span><span class="co">## |off_treatment            |Death         | 155|</span></span>
+<span><span class="co">## |off_treatment            |progression   | 119|</span></span>
+<span><span class="co">## |off_treatment            |NA            |  97|</span></span>
+<span><span class="co">## |progression              |Death         | 707|</span></span>
+<span><span class="co">## |progression              |NA            | 215|</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="descriptive-statistics-of-episodes-stratified-by-line-and-state">Descriptive statistics of episodes stratified by line and state<a class="anchor" aria-label="anchor" href="#descriptive-statistics-of-episodes-stratified-by-line-and-state"></a>
@@ -117,7 +117,7 @@ State)</caption>
 <col width="5%">
 <col width="6%">
 <col width="7%">
-<col width="5%">
+<col width="6%">
 <col width="6%">
 <col width="16%">
 <col width="16%">
@@ -135,123 +135,123 @@ State)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Line 1 - On_Treatment_Target_Line</td>
-<td align="right">8659</td>
-<td align="right">215.7</td>
-<td align="right">133</td>
+<td align="right">65</td>
+<td align="right">303.9</td>
+<td align="right">160.0</td>
 <td align="right">63.0</td>
-<td align="right">273.0</td>
-<td align="left">148 (1.7%)</td>
-<td align="left">234 (2.7%)</td>
+<td align="right">384.0</td>
+<td align="left">0 (0%)</td>
+<td align="left">1 (1.5%)</td>
 </tr>
 <tr class="even">
 <td align="left">Line 1 - off_treatment</td>
-<td align="right">2841</td>
-<td align="right">285.4</td>
-<td align="right">83</td>
-<td align="right">26.0</td>
-<td align="right">367.0</td>
-<td align="left">1141 (40.2%)</td>
-<td align="left">777 (27.3%)</td>
+<td align="right">13</td>
+<td align="right">619.8</td>
+<td align="right">372.0</td>
+<td align="right">138.0</td>
+<td align="right">803.0</td>
+<td align="left">4 (30.8%)</td>
+<td align="left">6 (46.2%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Line 1 - progression</td>
-<td align="right">6359</td>
-<td align="right">477.4</td>
-<td align="right">259</td>
-<td align="right">99.0</td>
-<td align="right">622.0</td>
-<td align="left">4728 (74.4%)</td>
-<td align="left">1631 (25.6%)</td>
+<td align="right">54</td>
+<td align="right">441.3</td>
+<td align="right">228.0</td>
+<td align="right">85.2</td>
+<td align="right">625.2</td>
+<td align="left">44 (81.5%)</td>
+<td align="left">10 (18.5%)</td>
 </tr>
 <tr class="even">
 <td align="left">Line 2 - On_Treatment_Target_Line</td>
-<td align="right">910</td>
-<td align="right">195.8</td>
-<td align="right">135</td>
-<td align="right">66.0</td>
-<td align="right">248.0</td>
-<td align="left">15 (1.6%)</td>
+<td align="right">899</td>
+<td align="right">190.2</td>
+<td align="right">129.0</td>
+<td align="right">63.0</td>
+<td align="right">239.5</td>
+<td align="left">14 (1.6%)</td>
 <td align="left">37 (4.1%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Line 2 - off_treatment</td>
-<td align="right">255</td>
-<td align="right">198.4</td>
-<td align="right">46</td>
-<td align="right">17.0</td>
-<td align="right">201.0</td>
-<td align="left">124 (48.6%)</td>
-<td align="left">70 (27.5%)</td>
+<td align="right">279</td>
+<td align="right">197.5</td>
+<td align="right">50.0</td>
+<td align="right">19.0</td>
+<td align="right">209.0</td>
+<td align="left">124 (44.4%)</td>
+<td align="left">68 (24.4%)</td>
 </tr>
 <tr class="even">
 <td align="left">Line 2 - progression</td>
-<td align="right">664</td>
-<td align="right">367.9</td>
-<td align="right">183</td>
-<td align="right">78.8</td>
-<td align="right">462.5</td>
-<td align="left">493 (74.2%)</td>
-<td align="left">171 (25.8%)</td>
+<td align="right">656</td>
+<td align="right">365.2</td>
+<td align="right">183.5</td>
+<td align="right">78.0</td>
+<td align="right">457.2</td>
+<td align="left">489 (74.5%)</td>
+<td align="left">167 (25.5%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Line 3 - On_Treatment_Target_Line</td>
-<td align="right">274</td>
-<td align="right">216.1</td>
-<td align="right">143</td>
-<td align="right">76.0</td>
-<td align="right">278.2</td>
+<td align="right">273</td>
+<td align="right">207.2</td>
+<td align="right">133.0</td>
+<td align="right">72.0</td>
+<td align="right">266.0</td>
 <td align="left">4 (1.5%)</td>
 <td align="left">7 (2.6%)</td>
 </tr>
 <tr class="even">
 <td align="left">Line 3 - off_treatment</td>
-<td align="right">65</td>
-<td align="right">147.0</td>
-<td align="right">40</td>
-<td align="right">17.0</td>
-<td align="right">171.0</td>
-<td align="left">27 (41.5%)</td>
-<td align="left">23 (35.4%)</td>
+<td align="right">79</td>
+<td align="right">152.0</td>
+<td align="right">67.0</td>
+<td align="right">21.5</td>
+<td align="right">171.5</td>
+<td align="left">27 (34.2%)</td>
+<td align="left">23 (29.1%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Line 3 - progression</td>
-<td align="right">213</td>
-<td align="right">351.8</td>
-<td align="right">179</td>
-<td align="right">80.0</td>
-<td align="right">428.0</td>
-<td align="left">174 (81.7%)</td>
-<td align="left">39 (18.3%)</td>
+<td align="right">212</td>
+<td align="right">349.6</td>
+<td align="right">178.5</td>
+<td align="right">79.0</td>
+<td align="right">423.5</td>
+<td align="left">174 (82.1%)</td>
+<td align="left">38 (17.9%)</td>
 </tr>
 <tr class="even">
 <td align="left">Overall - On_Treatment_Target_Line</td>
-<td align="right">9843</td>
-<td align="right">213.9</td>
-<td align="right">133</td>
-<td align="right">63.0</td>
-<td align="right">271.0</td>
-<td align="left">167 (1.7%)</td>
-<td align="left">278 (2.8%)</td>
+<td align="right">1237</td>
+<td align="right">199.9</td>
+<td align="right">132.0</td>
+<td align="right">66.0</td>
+<td align="right">248.0</td>
+<td align="left">18 (1.5%)</td>
+<td align="left">45 (3.6%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Overall - off_treatment</td>
-<td align="right">3161</td>
-<td align="right">275.5</td>
-<td align="right">76</td>
-<td align="right">24.0</td>
-<td align="right">351.0</td>
-<td align="left">1292 (40.9%)</td>
-<td align="left">870 (27.5%)</td>
+<td align="right">371</td>
+<td align="right">202.6</td>
+<td align="right">59.0</td>
+<td align="right">20.0</td>
+<td align="right">209.5</td>
+<td align="left">155 (41.8%)</td>
+<td align="left">97 (26.1%)</td>
 </tr>
 <tr class="even">
 <td align="left">Overall - progression</td>
-<td align="right">7236</td>
-<td align="right">463.6</td>
-<td align="right">248</td>
-<td align="right">96.0</td>
-<td align="right">597.0</td>
-<td align="left">5395 (74.6%)</td>
-<td align="left">1841 (25.4%)</td>
+<td align="right">922</td>
+<td align="right">366.1</td>
+<td align="right">189.0</td>
+<td align="right">78.2</td>
+<td align="right">456.0</td>
+<td align="left">707 (76.7%)</td>
+<td align="left">215 (23.3%)</td>
 </tr>
 </tbody>
 </table>
@@ -306,31 +306,31 @@ Therapy</caption>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">1 vs 3</td>
-<td align="right">-63.4</td>
-<td align="right">-100.71</td>
-<td align="right">-26.09</td>
-<td align="right">0.0009</td>
-<td align="right">546.87</td>
-<td align="right">483.47</td>
+<td align="left">3 vs 2</td>
+<td align="right">3.66</td>
+<td align="right">-30.60</td>
+<td align="right">37.92</td>
+<td align="right">0.8343</td>
+<td align="right">438.93</td>
+<td align="right">442.59</td>
 </tr>
 <tr class="even">
-<td align="left">1 vs 2</td>
-<td align="right">-56.7</td>
-<td align="right">-78.99</td>
-<td align="right">-34.41</td>
-<td align="right">0.0000</td>
-<td align="right">546.87</td>
-<td align="right">490.17</td>
+<td align="left">3 vs 1</td>
+<td align="right">76.47</td>
+<td align="right">10.53</td>
+<td align="right">142.41</td>
+<td align="right">0.0230</td>
+<td align="right">438.93</td>
+<td align="right">515.40</td>
 </tr>
 <tr class="odd">
-<td align="left">3 vs 2</td>
-<td align="right">6.7</td>
-<td align="right">-35.65</td>
-<td align="right">49.05</td>
-<td align="right">0.7565</td>
-<td align="right">483.47</td>
-<td align="right">490.17</td>
+<td align="left">2 vs 1</td>
+<td align="right">72.81</td>
+<td align="right">11.44</td>
+<td align="right">134.19</td>
+<td align="right">0.0201</td>
+<td align="right">442.59</td>
+<td align="right">515.40</td>
 </tr>
 </tbody>
 </table>
@@ -354,17 +354,7 @@ Therapy</caption>
 <span><span class="co">## crr(ftime = fg_data$ftime, fstatus = fg_data$fstatus, cov1 = model.matrix(~factor(fg_data$group))[, </span></span>
 <span><span class="co">##     -1])</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##                          coef exp(coef) se(coef)       z p-value</span></span>
-<span><span class="co">## factor(fg_data$group)2 -0.020     0.980    0.271 -0.0736    0.94</span></span>
-<span><span class="co">## factor(fg_data$group)3 -0.161     0.851    0.506 -0.3177    0.75</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##                        exp(coef) exp(-coef)  2.5% 97.5%</span></span>
-<span><span class="co">## factor(fg_data$group)2     0.980       1.02 0.576  1.67</span></span>
-<span><span class="co">## factor(fg_data$group)3     0.851       1.17 0.316  2.30</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Num. cases = 9565</span></span>
-<span><span class="co">## Pseudo Log-likelihood = -1529 </span></span>
-<span><span class="co">## Pseudo likelihood ratio test = 0.11  on 2 df,</span></span></code></pre>
+<span><span class="co">## crr converged: FALSE</span></span></code></pre>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

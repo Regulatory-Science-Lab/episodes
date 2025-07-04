@@ -86,24 +86,28 @@
 <span><span class="co">## |First Line      |               2058|</span></span>
 <span><span class="co">## |Second Line     |                982|</span></span>
 <span><span class="co">## |Third Line      |                110|</span></span></code></pre>
-<pre><code><span><span class="co">## The total number of pancreatic patients with overlapping lines that were filtered out is 3150</span></span></code></pre>
-<pre><code><span><span class="co">## The total number of pancreatic patients with single doses that were filtered out is 3026</span></span></code></pre>
+<pre><code><span><span class="co">## The total number of pancreatic patients with overlapping lines that were filtered out is 1092</span></span></code></pre>
+<pre><code><span><span class="co">## The total number of pancreatic patients with single doses that were filtered out is 1091</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: There was 1 warning in `dplyr::summarise()`.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `progression_date = min(progressiondate)`.</span></span>
+<span><span class="co">## Caused by warning in `min.default()`:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> no non-missing arguments to min; returning Inf</span></span></code></pre>
 <pre><code><span><span class="co">## The total number of pancreatic patients with treatment start pre-2010 that were filtered out is 0</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Table: Filtered Transition Counts Table</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## |state                    |next_state    |    n|</span></span>
-<span><span class="co">## |:------------------------|:-------------|----:|</span></span>
-<span><span class="co">## |Death                    |NA            | 2389|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |off_treatment | 2084|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |progression   |  665|</span></span>
-<span><span class="co">## |On_Treatment_Target_Line |NA            |  218|</span></span>
-<span><span class="co">## |off_treatment            |Death         | 1245|</span></span>
-<span><span class="co">## |off_treatment            |progression   |  665|</span></span>
-<span><span class="co">## |off_treatment            |NA            |  174|</span></span>
-<span><span class="co">## |progression              |Death         | 1144|</span></span>
-<span><span class="co">## |progression              |NA            |  186|</span></span></code></pre>
+<span><span class="co">## |state                    |next_state    |   n|</span></span>
+<span><span class="co">## |:------------------------|:-------------|---:|</span></span>
+<span><span class="co">## |Death                    |NA            | 854|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |off_treatment | 757|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |progression   | 205|</span></span>
+<span><span class="co">## |On_Treatment_Target_Line |NA            |  75|</span></span>
+<span><span class="co">## |off_treatment            |Death         | 497|</span></span>
+<span><span class="co">## |off_treatment            |progression   | 198|</span></span>
+<span><span class="co">## |off_treatment            |NA            |  62|</span></span>
+<span><span class="co">## |progression              |Death         | 357|</span></span>
+<span><span class="co">## |progression              |NA            |  46|</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="descriptive-statistics-of-episodes-stratified-by-line-and-state">Descriptive statistics of episodes stratified by line and state<a class="anchor" aria-label="anchor" href="#descriptive-statistics-of-episodes-stratified-by-line-and-state"></a>
@@ -134,52 +138,52 @@ State)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Line 1 - On_Treatment_Target_Line</td>
-<td align="right">1960</td>
-<td align="right">166.6</td>
-<td align="right">116.0</td>
-<td align="right">55.0</td>
-<td align="right">210.0</td>
+<td align="right">31</td>
+<td align="right">234.8</td>
+<td align="right">160.0</td>
+<td align="right">108.0</td>
+<td align="right">317.5</td>
 <td align="left">0 (0%)</td>
-<td align="left">146 (7.4%)</td>
+<td align="left">3 (9.7%)</td>
 </tr>
 <tr class="even">
 <td align="left">Line 1 - off_treatment</td>
-<td align="right">1346</td>
-<td align="right">101.8</td>
-<td align="right">45.0</td>
-<td align="right">26.0</td>
-<td align="right">90.8</td>
-<td align="left">764 (56.8%)</td>
-<td align="left">114 (8.5%)</td>
+<td align="right">20</td>
+<td align="right">60.5</td>
+<td align="right">45.5</td>
+<td align="right">17.8</td>
+<td align="right">86.0</td>
+<td align="left">17 (85%)</td>
+<td align="left">2 (10%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Line 1 - progression</td>
-<td align="right">936</td>
-<td align="right">310.5</td>
-<td align="right">213.5</td>
-<td align="right">101.8</td>
-<td align="right">402.5</td>
-<td align="left">794 (84.8%)</td>
-<td align="left">142 (15.2%)</td>
+<td align="right">9</td>
+<td align="right">441.4</td>
+<td align="right">209.0</td>
+<td align="right">153.0</td>
+<td align="right">398.0</td>
+<td align="left">7 (77.8%)</td>
+<td align="left">2 (22.2%)</td>
 </tr>
 <tr class="even">
 <td align="left">Line 2 - On_Treatment_Target_Line</td>
-<td align="right">908</td>
-<td align="right">139.1</td>
+<td align="right">907</td>
+<td align="right">139.2</td>
 <td align="right">92.0</td>
 <td align="right">49.0</td>
-<td align="right">168.2</td>
+<td align="right">168.5</td>
 <td align="left">0 (0%)</td>
 <td align="left">67 (7.4%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Line 2 - off_treatment</td>
-<td align="right">662</td>
+<td align="right">661</td>
 <td align="right">69.0</td>
 <td align="right">41.0</td>
 <td align="right">25.0</td>
 <td align="right">75.0</td>
-<td align="left">439 (66.3%)</td>
+<td align="left">438 (66.3%)</td>
 <td align="left">50 (7.6%)</td>
 </tr>
 <tr class="even">
@@ -224,33 +228,33 @@ State)</caption>
 </tr>
 <tr class="even">
 <td align="left">Overall - On_Treatment_Target_Line</td>
-<td align="right">2967</td>
-<td align="right">157.2</td>
-<td align="right">105.0</td>
-<td align="right">50.0</td>
-<td align="right">196.0</td>
+<td align="right">1037</td>
+<td align="right">142.0</td>
+<td align="right">95.0</td>
+<td align="right">49.0</td>
+<td align="right">175.0</td>
 <td align="left">0 (0%)</td>
-<td align="left">218 (7.3%)</td>
+<td align="left">75 (7.2%)</td>
 </tr>
 <tr class="odd">
 <td align="left">Overall - off_treatment</td>
-<td align="right">2084</td>
-<td align="right">90.1</td>
-<td align="right">44.0</td>
-<td align="right">26.0</td>
-<td align="right">84.0</td>
-<td align="left">1245 (59.7%)</td>
-<td align="left">174 (8.3%)</td>
+<td align="right">757</td>
+<td align="right">68.5</td>
+<td align="right">41.0</td>
+<td align="right">25.0</td>
+<td align="right">77.0</td>
+<td align="left">497 (65.7%)</td>
+<td align="left">62 (8.2%)</td>
 </tr>
 <tr class="even">
 <td align="left">Overall - progression</td>
-<td align="right">1330</td>
-<td align="right">285.6</td>
-<td align="right">193.0</td>
-<td align="right">92.2</td>
-<td align="right">361.8</td>
-<td align="left">1144 (86%)</td>
-<td align="left">186 (14%)</td>
+<td align="right">403</td>
+<td align="right">231.3</td>
+<td align="right">157.0</td>
+<td align="right">76.0</td>
+<td align="right">300.0</td>
+<td align="left">357 (88.6%)</td>
+<td align="left">46 (11.4%)</td>
 </tr>
 </tbody>
 </table>
@@ -305,31 +309,31 @@ Therapy</caption>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">1 vs 2</td>
-<td align="right">-63.66</td>
-<td align="right">-77.44</td>
-<td align="right">-49.88</td>
-<td align="right">0.0000</td>
-<td align="right">326.04</td>
-<td align="right">262.38</td>
+<td align="left">2 vs 1</td>
+<td align="right">58.43</td>
+<td align="right">12.02</td>
+<td align="right">104.84</td>
+<td align="right">0.0136</td>
+<td align="right">239.23</td>
+<td align="right">297.66</td>
 </tr>
 <tr class="even">
-<td align="left">1 vs 3</td>
-<td align="right">-46.44</td>
-<td align="right">-81.74</td>
-<td align="right">-11.14</td>
-<td align="right">0.0099</td>
-<td align="right">326.04</td>
-<td align="right">279.60</td>
+<td align="left">2 vs 3</td>
+<td align="right">12.40</td>
+<td align="right">-15.47</td>
+<td align="right">40.26</td>
+<td align="right">0.3833</td>
+<td align="right">239.23</td>
+<td align="right">251.63</td>
 </tr>
 <tr class="odd">
-<td align="left">2 vs 3</td>
-<td align="right">17.22</td>
-<td align="right">-18.96</td>
-<td align="right">53.41</td>
-<td align="right">0.3508</td>
-<td align="right">262.38</td>
-<td align="right">279.60</td>
+<td align="left">1 vs 3</td>
+<td align="right">-46.03</td>
+<td align="right">-98.69</td>
+<td align="right">6.62</td>
+<td align="right">0.0866</td>
+<td align="right">297.66</td>
+<td align="right">251.63</td>
 </tr>
 </tbody>
 </table>
